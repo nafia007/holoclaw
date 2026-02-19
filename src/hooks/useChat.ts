@@ -4,7 +4,7 @@ import type { Message } from '@/lib/types';
 import { api } from '@/services/api';
 
 export function useChat() {
-    const { currentConversationId, bearerToken, isPaired, setPairingDialogOpen } = useAppStore();
+    const { currentConversationId } = useAppStore();
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -15,23 +15,15 @@ export function useChat() {
             const welcomeMessage: Message = {
                 id: '1',
                 role: 'assistant',
-                content: isPaired
-                    ? "Hello! I'm ZeroClaw, your AI assistant. How can I help you today?"
-                    : "Welcome! To start chatting, you need to pair with the ZeroClaw gateway.\n\n1. Run `zeroclaw gateway` in your terminal\n2. Click the **Pair** button in the header\n3. Enter the 6-digit code shown in the terminal\n\nOnce paired, you can start chatting!",
+                content: "Hello! I'm ZeroClaw, your AI assistant. How can I help you today?",
                 timestamp: new Date(),
             };
 
             setMessages([welcomeMessage]);
         }
-    }, [currentConversationId, isPaired]);
+    }, [currentConversationId]);
 
     const sendMessage = async (content: string) => {
-        // Check if paired before sending
-        if (!isPaired || !bearerToken) {
-            setPairingDialogOpen(true);
-            return;
-        }
-
         setError(null);
         setIsLoading(true);
 
@@ -44,7 +36,7 @@ export function useChat() {
         setMessages(prev => [...prev, userMsg]);
 
         try {
-            const response = await api.sendMessage(content, bearerToken);
+            const response = await api.sendMessage(content);
             const assistantMsg: Message = {
                 id: (Date.now() + 1).toString(),
                 role: 'assistant',
@@ -55,11 +47,6 @@ export function useChat() {
         } catch (err) {
             const errorMsg = err instanceof Error ? err.message : 'Failed to send message';
             setError(errorMsg);
-
-            // Check if it's an auth error
-            if (errorMsg.includes('Unauthorized') || errorMsg.includes('pair')) {
-                setPairingDialogOpen(true);
-            }
 
             const errorMessage: Message = {
                 id: (Date.now() + 1).toString(),

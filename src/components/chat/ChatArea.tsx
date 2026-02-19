@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
-import { Send, Image, FileText, Bot, User, Loader2, Key, CheckCircle } from 'lucide-react';
+import { Send, Image, FileText, Bot, User, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
@@ -10,7 +10,7 @@ import { useAppStore } from '@/store';
 import { useChat } from '@/hooks/useChat';
 
 export function ChatArea() {
-    const { currentConversationId, isPaired, setPairingDialogOpen } = useAppStore();
+    const { currentConversationId } = useAppStore();
     const { messages, sendMessage, isLoading } = useChat();
     const [input, setInput] = useState('');
     const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -61,32 +61,8 @@ export function ChatArea() {
                     </h2>
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
                         Using ZeroClaw Gateway
-                        <span
-                            className={cn(
-                                "w-2 h-2 rounded-full ml-2",
-                                isPaired ? "bg-green-500" : "bg-yellow-500"
-                            )}
-                            title={isPaired ? "Connected & Paired" : "Not Paired"}
-                        />
+                        <span className="w-2 h-2 rounded-full bg-green-500 ml-2" title="Connected" />
                     </span>
-                </div>
-                <div className="flex gap-2">
-                    {isPaired ? (
-                        <Button variant="ghost" size="sm" className="text-green-500 gap-1">
-                            <CheckCircle className="h-4 w-4" />
-                            Paired
-                        </Button>
-                    ) : (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setPairingDialogOpen(true)}
-                            className="gap-1"
-                        >
-                            <Key className="h-4 w-4" />
-                            Pair
-                        </Button>
-                    )}
                 </div>
             </header>
 

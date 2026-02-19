@@ -1,6 +1,5 @@
 import { Sidebar } from '@/components/layout/Sidebar';
 import { ChatArea } from '@/components/chat/ChatArea';
-import { PairingDialog } from '@/components/settings/PairingDialog';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -50,9 +49,6 @@ export function AppLayout() {
 
                 <ChatArea />
             </main>
-
-            {/* Pairing Dialog */}
-            <PairingDialog />
         </div>
     );
 }
